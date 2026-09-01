@@ -5,6 +5,8 @@ import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { getAuth } from './lib/auth.js';
 import postRoutes from './routes/postRoutes.js';
+import reactionRoutes from './routes/reactionRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 const startServer = async () => {
   await connectDB();
@@ -24,6 +26,8 @@ const startServer = async () => {
   app.use(express.json());
 
   app.use('/api/posts', postRoutes);
+  app.use('/api/reactions', reactionRoutes);
+  app.use('/api/comments', commentRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
