@@ -4,6 +4,7 @@ import cors from 'cors';
 import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { getAuth } from './lib/auth.js';
+import postRoutes from './routes/postRoutes.js';
 
 const startServer = async () => {
   await connectDB();
@@ -21,6 +22,8 @@ const startServer = async () => {
   app.all('/api/auth/*splat', toNodeHandler(auth));
 
   app.use(express.json());
+
+  app.use('/api/posts', postRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
