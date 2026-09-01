@@ -3,11 +3,12 @@ import express from 'express';
 import cors from 'cors';
 import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
-import { auth } from './lib/auth.js';
+import { getAuth } from './lib/auth.js';
 
 const startServer = async () => {
   await connectDB();
 
+  const auth = getAuth();
   const app = express();
 
   app.use(
