@@ -9,10 +9,11 @@ export const createComment = async (req, res) => {
       content,
       parentCommentId: parentCommentId || null,
       authorId: req.user.id,
+      authorName: req.user.name,
+      authorImage: req.user.image || null,
     });
 
-    const populated = await comment.populate('authorId', 'name image');
-    res.status(201).json(populated);
+    res.status(201).json(comment);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -22,9 +23,7 @@ export const getPostComments = async (req, res) => {
   try {
     const { postId } = req.params;
 
-    const comments = await Comment.find({ postId })
-      .populate('authorId', 'name image')
-      .sort({ createdAt: 1 });
+    const comments = await Comment.find({ postId }).sort({ createdAt: 1 });
 
     res.json(comments);
   } catch (error) {

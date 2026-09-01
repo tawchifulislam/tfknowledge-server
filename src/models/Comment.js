@@ -9,8 +9,15 @@ const commentSchema = new mongoose.Schema(
     },
     authorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
       required: true,
+    },
+    authorName: {
+      type: String,
+      required: true,
+    },
+    authorImage: {
+      type: String,
+      default: null,
     },
     content: {
       type: String,
