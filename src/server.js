@@ -7,6 +7,8 @@ import { getAuth } from './lib/auth.js';
 import postRoutes from './routes/postRoutes.js';
 import reactionRoutes from './routes/reactionRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import topicRequestRoutes from './routes/topicRequestRoutes.js';
+import voteRoutes from './routes/voteRoutes.js';
 
 const startServer = async () => {
   await connectDB();
@@ -28,6 +30,8 @@ const startServer = async () => {
   app.use('/api/posts', postRoutes);
   app.use('/api/reactions', reactionRoutes);
   app.use('/api/comments', commentRoutes);
+  app.use('/api/topic-requests', topicRequestRoutes);
+  app.use('/api/votes', voteRoutes);
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });

@@ -14,7 +14,10 @@ const topicRequestSchema = new mongoose.Schema(
     },
     requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      required: true,
+    },
+    requestedByName: {
+      type: String,
       required: true,
     },
     status: {

@@ -47,7 +47,6 @@ export const deleteComment = async (req, res) => {
     }
 
     comment.isDeleted = true;
-    comment.content = '';
     await comment.save();
 
     res.json({ message: 'Comment deleted' });
