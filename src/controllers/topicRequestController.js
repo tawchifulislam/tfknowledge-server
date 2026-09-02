@@ -30,6 +30,18 @@ export const getAllTopicRequests = async (req, res) => {
   }
 };
 
+export const getMyTopicRequests = async (req, res) => {
+  try {
+    const topics = await TopicRequest.find({
+      requestedBy: req.user.id,
+    }).sort({ createdAt: -1 });
+
+    res.json(topics);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const updateTopicStatus = async (req, res) => {
   try {
     const { status } = req.body;
