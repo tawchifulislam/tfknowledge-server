@@ -27,11 +27,24 @@ export const createPost = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ status: 'published' })
-      .sort({ publishedAt: -1 })
-      .select('title slug excerpt coverImage tags publishedAt');
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 9;
+    const skip = (page - 1) * limit;
 
-    res.json(posts);
+    const [posts, total] = await Promise.all([
+      Post.find({ status: 'published' })
+        .sort({ publishedAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select('title slug excerpt coverImage tags publishedAt'),
+      Post.countDocuments({ status: 'published' }),
+    ]);
+
+    res.json({
+      posts,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
