@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { toNodeHandler } from 'better-auth/node';
 import { connectDB } from './config/db.js';
 import { getAuth } from './lib/auth.js';
@@ -15,6 +16,8 @@ const startServer = async () => {
 
   const auth = getAuth();
   const app = express();
+
+  app.use(helmet({ crossOriginResourcePolicy: false }));
 
   app.use(
     cors({
