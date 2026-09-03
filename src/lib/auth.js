@@ -10,6 +10,15 @@ export const getAuth = () => {
       database: mongodbAdapter(mongoose.connection.db),
       baseURL: process.env.BETTER_AUTH_URL,
       trustedOrigins: [process.env.CLIENT_URL],
+      advanced: {
+        crossSubDomainCookies: {
+          enabled: false,
+        },
+        defaultCookieAttributes: {
+          sameSite: 'none',
+          secure: true,
+        },
+      },
       socialProviders: {
         google: {
           clientId: process.env.GOOGLE_CLIENT_ID,
