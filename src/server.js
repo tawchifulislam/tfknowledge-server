@@ -10,6 +10,7 @@ import reactionRoutes from './routes/reactionRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import topicRequestRoutes from './routes/topicRequestRoutes.js';
 import voteRoutes from './routes/voteRoutes.js';
+import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 const startServer = async () => {
   await connectDB();
@@ -43,6 +44,9 @@ const startServer = async () => {
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
   });
+
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
