@@ -8,12 +8,13 @@ import {
 } from '../controllers/topicRequestController.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { requireAdmin } from '../middleware/requireAdmin.js';
+import { authActionLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
 router.get('/', getAllTopicRequests);
 router.get('/mine', requireAuth, getMyTopicRequests);
-router.post('/', requireAuth, createTopicRequest);
+router.post('/', requireAuth, authActionLimiter, createTopicRequest);
 router.patch('/:id/status', requireAdmin, updateTopicStatus);
 router.delete('/:id', requireAuth, deleteTopicRequest);
 
