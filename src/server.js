@@ -33,6 +33,10 @@ const startServer = async () => {
   app.use('/api/topic-requests', topicRequestRoutes);
   app.use('/api/votes', voteRoutes);
 
+  app.get('/', (req, res) => {
+    res.json({ message: 'Thirsty for Knowledge API is running' });
+  });
+
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
   });
