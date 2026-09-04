@@ -30,6 +30,7 @@ const startServer = async () => {
   app.all('/api/auth/*splat', toNodeHandler(auth));
 
   app.use(express.json());
+  app.use(mongoSanitize());
 
   app.use('/api/posts', postRoutes);
   app.use('/api/reactions', reactionRoutes);
