@@ -30,6 +30,11 @@ const postSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    language: {
+      type: String,
+      enum: ['bn', 'en'],
+      default: 'bn',
+    },
     status: {
       type: String,
       enum: ['draft', 'published'],

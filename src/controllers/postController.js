@@ -3,7 +3,8 @@ import { generateUniqueSlug } from '../lib/generateSlug.js';
 
 export const createPost = async (req, res) => {
   try {
-    const { title, content, excerpt, coverImage, tags, status } = req.body;
+    const { title, content, excerpt, coverImage, tags, status, language } =
+      req.body;
 
     const slug = await generateUniqueSlug(title);
 
@@ -15,6 +16,7 @@ export const createPost = async (req, res) => {
       coverImage,
       tags,
       status,
+      language: language || 'bn',
       authorId: req.user.id,
       publishedAt: status === 'published' ? new Date() : null,
     });
@@ -36,7 +38,7 @@ export const getAllPosts = async (req, res) => {
         .sort({ publishedAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select('title slug excerpt coverImage tags publishedAt'),
+        .select('title slug excerpt coverImage tags language publishedAt'),
       Post.countDocuments({ status: 'published' }),
     ]);
 
@@ -54,7 +56,7 @@ export const getAllPostsForAdmin = async (req, res) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .select('title slug status coverImage createdAt publishedAt');
+      .select('title slug status coverImage language createdAt publishedAt');
 
     res.json(posts);
   } catch (error) {
@@ -95,7 +97,8 @@ export const getPostBySlug = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   try {
-    const { title, content, excerpt, coverImage, tags, status } = req.body;
+    const { title, content, excerpt, coverImage, tags, status, language } =
+      req.body;
 
     const post = await Post.findById(req.params.id);
     if (!post) {
@@ -111,6 +114,7 @@ export const updatePost = async (req, res) => {
     if (excerpt !== undefined) post.excerpt = excerpt;
     if (coverImage !== undefined) post.coverImage = coverImage;
     if (tags !== undefined) post.tags = tags;
+    if (language !== undefined) post.language = language;
 
     if (status && status !== post.status) {
       post.status = status;
