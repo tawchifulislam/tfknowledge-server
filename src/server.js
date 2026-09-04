@@ -11,7 +11,7 @@ import commentRoutes from './routes/commentRoutes.js';
 import topicRequestRoutes from './routes/topicRequestRoutes.js';
 import voteRoutes from './routes/voteRoutes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
-import ExpressMongoSanitize from 'express-mongo-sanitize';
+import mongoSanitize from 'express-mongo-sanitize';
 
 const startServer = async () => {
   await connectDB();
@@ -31,7 +31,7 @@ const startServer = async () => {
   app.all('/api/auth/*splat', toNodeHandler(auth));
 
   app.use(express.json());
-  app.use(ExpressMongoSanitize());
+  app.use(mongoSanitize());
 
   app.use('/api/posts', postRoutes);
   app.use('/api/reactions', reactionRoutes);
