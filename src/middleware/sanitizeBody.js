@@ -1,0 +1,21 @@
+const sanitizeObject = obj => {
+  if (obj === null || typeof obj !== 'object') return obj;
+
+  for (const key in obj) {
+    if (key.startsWith('$') || key.includes('.')) {
+      delete obj[key];
+      continue;
+    }
+    if (typeof obj[key] === 'object') {
+      sanitizeObject(obj[key]);
+    }
+  }
+  return obj;
+};
+
+export const sanitizeBody = (req, res, next) => {
+  if (req.body && typeof req.body === 'object') {
+    sanitizeObject(req.body);
+  }
+  next();
+};
