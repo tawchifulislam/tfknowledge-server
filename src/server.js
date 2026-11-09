@@ -14,10 +14,8 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { sanitizeBody } from './middleware/sanitizeBody.js';
 
 const startServer = async () => {
-  await connectDB();
-
-  const auth = getAuth();
   const app = express();
+  let ready = false;
 
   app.use(helmet({ crossOriginResourcePolicy: false }));
 
@@ -27,6 +25,29 @@ const startServer = async () => {
       credentials: true,
     }),
   );
+
+  app.get('/', (req, res) => {
+    res.json({ message: 'Thirsty for Knowledge API is running' });
+  });
+
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', ready });
+  });
+
+  app.use((req, res, next) => {
+    if (ready) return next();
+    res.set('Retry-After', '5');
+    res
+      .status(503)
+      .json({ message: 'Server is warming up, please retry shortly' });
+  });
+
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+  await connectDB();
+
+  const auth = getAuth();
 
   app.all('/api/auth/*splat', toNodeHandler(auth));
 
@@ -39,19 +60,11 @@ const startServer = async () => {
   app.use('/api/topic-requests', topicRequestRoutes);
   app.use('/api/votes', voteRoutes);
 
-  app.get('/', (req, res) => {
-    res.json({ message: 'Thirsty for Knowledge API is running' });
-  });
-
-  app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok' });
-  });
-
   app.use(notFoundHandler);
   app.use(errorHandler);
 
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  ready = true;
+  console.log('Server ready');
 };
 
 startServer();
